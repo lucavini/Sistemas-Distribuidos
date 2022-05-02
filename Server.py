@@ -15,6 +15,7 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):#Declaração d
 
 class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer): # Declaração do classe "ThreadedUDPServer" que apenas recebe os parâmetros "socketserver.ThreadingMixIn" e "socketserver.UDPServer"
     pass
+
 if __name__ == "__main__":# Inicio da execução do código
     UDP_IP_ADDRESS = "127.0.0.1" # Este é o IP que o Servidor está sendo associado
     UDP_PORT_NO = 6789 # A porta que o Servidor vai ficar escutando.
