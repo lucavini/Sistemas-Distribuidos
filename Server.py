@@ -1,17 +1,62 @@
 import socketserver #Esta biblioteca tenta capturar os vários aspectos da definição de um servidor baseados em socket
 import threading #Importação da biblioteca threading constrói interfaces de threading.
 import time #Importação da biblioteca Time, que é utilizada pra fazer o calculo dos tempos no código.
+from ast import literal_eval
 
 print("SERVIDOR UDP INICIADO") # Exibe na tela a mensagem "SERVIDOR UDP INICIADO"
 
 class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):#Declaração do classe "ThreadedUDPRequestHandler" que recebe como parâmetro "socketserver.BaseRequestHandler"
     
+    def multMatriz(mat1, mat2):
+        def getLinha(matriz, n):
+            return [i for i in matriz[n]]  # ou simplesmente return matriz[n]
+
+        def getColuna(matriz, n):
+            return [i[n] for i in matriz]
+
+        mat1lin = len(mat1)                # retorna 2
+        mat1col = len(mat1[0])             # retorna 2
+
+        mat2lin = len(mat2)                # retorna 2
+        mat2col = len(mat1[0])             # retorna 3
+
+        matRes = []
+        
+        for i in range(mat1lin):           
+            matRes.append([])
+            for j in range(mat2col):
+                # multiplica cada linha de mat1 por cada coluna de mat2;
+                listMult = [x*y for x, y in zip(getLinha(mat1, i), getColuna(mat2, j))]
+
+                # e em seguida adiciona a matRes a soma das multiplicações
+                matRes[i].append(sum(listMult))
+        return matRes
+
     def handle(self): #Declaração do método "handle"
-        data = self.request[0].strip() #Declaração da variável "data" com a função "strip" voltada para strings, que tira os espaços em branco.
+        data = self.request[0]
+        Array = literal_eval(data.decode())
+        matriz1 = []
+        matriz2 = []
+
+        # Pega a primeira matriz
+        for i in Array[0]:
+            matriz1.append(literal_eval(i))
+        print('matriz1: ', matriz1)
+
+        # Pega a segunda matriz
+        for i in Array[1]:
+            matriz2.append(literal_eval(i))
+        print('matriz2: ', matriz2)
+        
         socket = self.request[1] #Declaração da variável "socket" 
         current_thread = threading.current_thread() #Declaração da variável "current_thread" que recebe a Thread atual
-        print("{}: Cliente: {}, Escreve: {}".format(current_thread.name, self.client_address, data)) #Exibe na tela a Thread e o número dela, O IP e Porta utilizados, e a mensagem enviada pelo cliente.
-        socket.sendto(data.upper(), self.client_address) # O socket envia a resposta ao Cliente por meio da função "sendto"
+        
+        response = ThreadedUDPRequestHandler.multMatriz(matriz1, matriz2)
+        print('Matriz multiplicada: ',response)
+
+        StringResponse = [[str(ele) for ele in sub] for sub in response] 
+
+        socket.sendto(str(StringResponse).encode(), self.client_address) # O socket envia a resposta ao Cliente por meio da função "sendto"
 
 class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer): # Declaração do classe "ThreadedUDPServer" que apenas recebe os parâmetros "socketserver.ThreadingMixIn" e "socketserver.UDPServer"
     pass
