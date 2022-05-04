@@ -73,14 +73,19 @@ if __name__ == '__main__':
     print('Criando conexão TCP')
     print("Aguardando nova conexao TCP..")
     tcpServer = socket.socket(family=socket.AF_INET ,type=socket.SOCK_STREAM)
-    PORT2 = 7003
+    PORT2 = 7005
     tcpServer.bind((LOCALHOST, PORT2))
     tcpServer.listen()
     conn, addr = tcpServer.accept()
     data = conn.recv(1024).decode("ascii") 
     print('Endereço do servidor parceiro: ', addr)
     print('Mensagem recebida: ', data)
-    conn.send(b'Confirmada conexao')
+
+    while True:
+        time.sleep(5)
+        conn.send(b'Confirmada conexao')
+        data = conn.recv(1024).decode("ascii")
+        print(data) 
 
 
     while True:
