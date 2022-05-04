@@ -1,12 +1,16 @@
-import socketserver #Esta biblioteca tenta capturar os vários aspectos da definição de um servidor baseados em socket
-import threading #Importação da biblioteca threading constrói interfaces de threading.
-import time #Importação da biblioteca Time, que é utilizada pra fazer o calculo dos tempos no código.
+import socket, threading
 from ast import literal_eval
+import time
 
-print("SERVIDOR UDP INICIADO") # Exibe na tela a mensagem "SERVIDOR UDP INICIADO"
+class Thread(threading.Thread):
+    def __init__(self,Message,Adress,Socket):
+        threading.Thread.__init__(self)
+        self.Mess=Message
+        self.Ad=Adress
+        self.socket=Socket
+        print('Iniciada conexão com cliente',Adress)
 
-class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):#Declaração do classe "ThreadedUDPRequestHandler" que recebe como parâmetro "socketserver.BaseRequestHandler"
-    
+
     def multMatriz(mat1, mat2):
         def getLinha(matriz, n):
             return [i for i in matriz[n]]  # ou simplesmente return matriz[n]
@@ -32,9 +36,10 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):#Declaração d
                 matRes[i].append(sum(listMult))
         return matRes
 
-    def handle(self): #Declaração do método "handle"
-        data = self.request[0]
-        Array = literal_eval(data.decode())
+
+    def run(self):
+        # recebe = self.Sock.recv(1024)
+        Array = literal_eval(self.Mess.decode())
         matriz1 = []
         matriz2 = []
 
@@ -47,34 +52,39 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):#Declaração d
         for i in Array[1]:
             matriz2.append(literal_eval(i))
         print('matriz2: ', matriz2)
-        
-        socket = self.request[1] #Declaração da variável "socket" 
-        current_thread = threading.current_thread() #Declaração da variável "current_thread" que recebe a Thread atual
-        
-        response = ThreadedUDPRequestHandler.multMatriz(matriz1, matriz2)
+
+        response = Thread.multMatriz(matriz1, matriz2)
         print('Matriz multiplicada: ',response)
 
-        StringResponse = [[str(ele) for ele in sub] for sub in response] 
+        StringResponse = [[str(ele) for ele in sub] for sub in response]
+        print(len(str(StringResponse)))
+        self.socket.sendto(str(StringResponse).encode(),self.Ad)
 
-        socket.sendto(str(StringResponse).encode(), self.client_address) # O socket envia a resposta ao Cliente por meio da função "sendto"
 
-class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer): # Declaração do classe "ThreadedUDPServer" que apenas recebe os parâmetros "socketserver.ThreadingMixIn" e "socketserver.UDPServer"
-    pass
+if __name__ == '__main__':
+    LOCALHOST = '' #define o localhost, como é passado '' ele assume o valor padrão, que é 127.0.0.1
+    PORT = 7002 #define a porta, nesse caso a porta 7002 será dedicada a conexão UDP do servidor
+    server = socket.socket(family=socket.AF_INET ,type=socket.SOCK_DGRAM) #define o socket, onde, family=socket.AF_INET diz que será utilizado ipv4 e type=socket.SOCK_DGRAM define o socket como um socket UDP
+    server.bind((LOCALHOST, PORT)) #vincula o ip e porta que serão usados
+    print("Servidor iniciado!")
+    print("Aguardando nova conexao..")
 
-if __name__ == "__main__":# Inicio da execução do código
-    UDP_IP_ADDRESS = "127.0.0.1" # Este é o IP que o Servidor está sendo associado
-    UDP_PORT_NO = 6789 # A porta que o Servidor vai ficar escutando.
 
-    server = ThreadedUDPServer((UDP_IP_ADDRESS, UDP_PORT_NO), ThreadedUDPRequestHandler) # A varável "server" recebe a classe "ThreadedUDPServer", O Endereço e Porta e a primeira classe "ThreadedUDPRequestHandler"
-    server_thread = threading.Thread(target=server.serve_forever) # Recebe a Thread e ocorre a chamada de "server.serve_forever"
-    server_thread.daemon = True # Variável Booleana e recebe "True"
+    print('Criando conexão TCP')
+    print("Aguardando nova conexao TCP..")
+    tcpServer = socket.socket(family=socket.AF_INET ,type=socket.SOCK_STREAM)
+    PORT2 = 7003
+    tcpServer.bind((LOCALHOST, PORT2))
+    tcpServer.listen()
+    conn, addr = tcpServer.accept()
+    data = conn.recv(1024).decode("ascii") 
+    print('Endereço do servidor parceiro: ', addr)
+    print('Mensagem recebida: ', data)
+    conn.send(b'Confirmada conexao')
 
-    try: # Tenta fazer a execução do código
-        server_thread.start() #A Thread é iniciada
-        print("Servidor iniciado no endereço {} e na porta {}".format(UDP_IP_ADDRESS, UDP_PORT_NO))# Exibe na tela a mensagem "Servidor iniciado no endereço {} e na porta {}"
-        while True: #Loop infinito que deixa o servidor sempre ativo
-            time.sleep(2)# Tempo da Thread dormir, caso o Loop não seja infinito
-    except (KeyboardInterrupt, SystemExit):#Caso o código dê algum erro
-        server.shutdown()#Desliga o Server
-        server.server_close()#Fecha o Server
-        exit()#O código said execução
+
+    while True:
+        print('numero de threads ativas: ',threading.active_count()) #mostra o número de threads ativas no momento (usaremos para limitar o número de conexões)
+        rec=server.recvfrom(1024) #espera alguém mandar uma mensagem
+        newthread = Thread(rec[0],rec[1],server) #cria uma trhead e armazena nela (a mensagem recebida, o ip e porta de quem enviou, e o socket UDP para enviar a resposta
+        newthread.start() #inicia a thread
