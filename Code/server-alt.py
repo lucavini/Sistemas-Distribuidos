@@ -6,8 +6,9 @@ import time
 import os
 import random
 from urllib import request
-
+from operator import itemgetter
 from pandas import array
+import ctypes
 
 
 
@@ -47,6 +48,10 @@ class Thread(threading.Thread):
 
 
     def run(self):
+        libc = ctypes.cdll.LoadLibrary('libc.so.6')
+        SYS_gettid = 186
+        
+        t1 = time.time()
         # recebe = self.Sock.recv(1024)
         Array = literal_eval(self.Mess.decode())
         matriz1 = []
@@ -70,9 +75,13 @@ class Thread(threading.Thread):
         self.socket.sendto(str(StringResponse).encode(),self.Ad)
         global requestinappointment 
         print('Dentro da Funcao antes: ', requestinappointment)
-        time.sleep(2)
         requestinappointment -= 1
         print('Dentro da Funcao depois: ', requestinappointment)
+        t2 = time.time()
+        t = t2 - t1
+        cmd = "echo {0}, {1}, >> data2.csv".format(t, libc.syscall(SYS_gettid))
+        os.system(cmd)
+
         
 
 class ThreadProc(threading.Thread):
@@ -84,7 +93,7 @@ class ThreadProc(threading.Thread):
         self.UDPAd=Udpad
 
     def run(self):
-        t1 = time()
+        t1 = time.time()
         filho=os.fork()
         if filho == 0:
             self.TCP.send(self.Mess)
@@ -93,46 +102,45 @@ class ThreadProc(threading.Thread):
             self.UDP.sendto(data,self.UDPAd)
         else:
             os.waitpid(filho,0)
-        t2 = time()
-        t = t2 - t1
-        Array = self.Mess
-        matriz1 = []
-        matriz2 = []
+            t2 = time.time()
+            t = t2 - t1
+            cmd = "echo {0}, {1}, >> data1.csv".format(t, filho)
+            os.system(cmd)
+            Array = literal_eval(self.Mess.decode())
+            matriz1 = []
+            matriz2 = []
 
-        # Pega a primeira matriz
-        for i in Array[0]:
-            matriz1.append(literal_eval(i))
-        # print('matriz1: ', matriz1)
+            # Pega a primeira matriz
+            for i in Array[0]:
+                matriz1.append(literal_eval(i))
+            # print('matriz1: ', matriz1)
 
-        # Pega a segunda matriz
-        for i in Array[1]:
-            matriz2.append(literal_eval(i))
-        # print('matriz2: ', matriz2)
-        tp = len(matriz1) * len(matriz2[0])
-        td = t/tp
-        global serverslist
-        global unavailablelist
-        ind = -1
+            # Pega a segunda matriz
+            for i in Array[1]:
+                matriz2.append(literal_eval(i))
+            # print('matriz2: ', matriz2)
+            tp = len(matriz1) * len(matriz2[0])
+            td = t/tp
+            global serverslist
+            global unavailablelist
+            ind = -1
 
-        for item in range(len(serverlist)):
-            if serverlist[item][0] == self.TCP:
-                ind = item
-        
-        if ind != -1:
-            serverlist[ind][1] += 1
-            serverlist[ind][2] = td
-        else:
-            for item in range(len(unavailablelist)):
-                if unavailablelist[item][0] == self.TCP:
+            for item in range(len(serverlist)):
+                if serverlist[item][0] == self.TCP:
                     ind = item
-            unavailablelist[ind][1] += 1
-            unavailablelist[ind][2] = td
-            serverlist.append(unavailablelist.pop(ind))
+            
+            if ind != -1:
+                serverlist[ind][1] += 1
+                serverlist[ind][2] = td
+            else:
+                for item in range(len(unavailablelist)):
+                    if unavailablelist[item][0] == self.TCP:
+                        ind = item
+                unavailablelist[ind][1] += 1
+                unavailablelist[ind][2] = td
+                serverlist.append(unavailablelist.pop(ind))
 
-        for i in range(len(serverlist)):
-            sorted(serverlist[i][2])
-
-
+            sorted(serverlist, key=itemgetter(2))
 
 
 if __name__ == '__main__':
@@ -142,7 +150,7 @@ if __name__ == '__main__':
     global unavailablelist
     unavailablelist = []
     requestinappointment = 0
-    maxrequest = 5
+    maxrequest = 10
     serverlist = []
     LOCALHOST = '' #define o localhost, como é passado '' ele assume o valor padrão, que é 127.0.0.1
     PORT = 7002 #define a porta, nesse caso a porta 7002 será dedicada a conexão UDP do servidor
@@ -157,7 +165,7 @@ if __name__ == '__main__':
     # print('Criando conexão TCP')
     # print("Aguardando nova conexao TCP..")
     tcpServer = socket.socket(family=socket.AF_INET ,type=socket.SOCK_STREAM)
-    PORT2 = 7020
+    PORT2 = 7025
     tcpServer.bind((LOCALHOST, PORT2))
     for x in range(1):
         tcpServer.listen()

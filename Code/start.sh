@@ -1,7 +1,7 @@
 #!/bin/bash
 
 T=0
-QTD=20
+QTD=30
 while [ $T -le $QTD ]; do
     echo "Criando Containers"
     python3 client.py

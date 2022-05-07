@@ -32,8 +32,8 @@ host_docker = socket.gethostbyname(socket.gethostname())
 print('meu ip: ', host_docker)
 
 HOST = host_docker
-maxqtd = 2
-PORT = 7020 
+maxqtd = 20
+PORT = 7025
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         
