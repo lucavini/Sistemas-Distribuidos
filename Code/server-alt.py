@@ -152,12 +152,13 @@ if __name__ == '__main__':
     requestinappointment = 0
     maxrequest = 10
     serverlist = []
-    LOCALHOST = '' #define o localhost, como é passado '' ele assume o valor padrão, que é 127.0.0.1
+    LOCALHOST = socket.gethostbyname('ipc_server_dns_name') #define o localhost, como é passado '' ele assume o valor padrão, que é 127.0.0.1
     PORT = 7002 #define a porta, nesse caso a porta 7002 será dedicada a conexão UDP do servidor
     server = socket.socket(family=socket.AF_INET ,type=socket.SOCK_DGRAM) #define o socket, onde, family=socket.AF_INET diz que será utilizado ipv4 e type=socket.SOCK_DGRAM define o socket como um socket UDP
     server.bind((LOCALHOST, PORT)) #vincula o ip e porta que serão usados
-    # print("Servidor iniciado!")
-    # print("Aguardando nova conexao..")
+    print("Servidor iniciado!")
+    print("Aguardando nova conexao..")
+    print('servidor: ', server)
 
     
         

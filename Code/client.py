@@ -3,7 +3,7 @@ import subprocess #Esta biblioteca permite a criação de processos, conexão a 
 from ast import literal_eval
 
 
-UDP_IP_ADDRESS = "127.0.0.1" # Este é o IP do Servidor, chamado de IP de LoopBack, ele se auto referencia.
+UDP_IP_ADDRESS = socket.gethostbyname('ipc_server_dns_name') # Este é o IP do Servidor, chamado de IP de LoopBack, ele se auto referencia.
 UDP_PORT_NO = 7002 # Número da porta, esse valor vai dentro da mensagem que está sendo transmitida.
 # Message = [[[6, 0], [3, 0]],[[6, 0], [3, 0]]] # Messangem que está sendo transmitida
 Message = [[[6, 0, 1, 4, 5, 8, 9, 9, 4, 8], [3, 0, 2, 8, 6, 8, 1, 8, 5, 5], [5, 3, 2, 8, 1, 1, 3, 5, 7, 9], [4, 0, 6, 4, 9, 8, 0, 6, 7, 8], [7, 1, 6, 2, 9, 3, 0, 0, 8, 5], [2, 8, 7, 1, 9, 1, 5, 0, 6, 4], [4, 4, 0, 4, 1, 0, 8, 1, 1, 3], [9, 3, 3, 0, 9, 3, 7, 3, 9, 8], [4, 6, 9, 6, 8, 5, 1, 6, 4, 4], [2, 8, 7, 6, 5, 4, 0, 0, 1, 6]], [[7, 0, 4, 3, 9, 5, 4, 1, 2, 5], [7, 3, 9, 9, 7, 8, 4, 1, 9, 2], [7, 6, 8, 5, 9, 1, 5, 0, 6, 9], [9, 4, 6, 3, 5, 2, 3, 2, 4, 5], [1, 0, 0, 1, 0, 7, 4, 0, 6, 7], [1, 8, 4, 4, 2, 6, 4, 0, 7, 6], [6, 3, 4, 7, 4, 1, 1, 0, 7, 5], [4, 7, 0, 7, 5, 9, 4, 7, 7, 6], [9, 0, 0, 2, 1, 7, 9, 6, 5, 3], [7, 1, 1, 2, 9, 8, 8, 8, 1, 3]]] # Messangem que está sendo transmitida
