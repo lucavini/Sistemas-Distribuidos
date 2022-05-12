@@ -7,7 +7,7 @@ import os
 import random
 from urllib import request
 from operator import itemgetter
-from pandas import array
+# from pandas import array
 import ctypes
 
 
