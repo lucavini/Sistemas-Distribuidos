@@ -136,7 +136,7 @@ if __name__ == '__main__':
     global unavailablelist # Lista de servidores indisponíveis
     unavailablelist = []
     requestinappointment = 0
-    maxrequest = 1
+    maxrequest = 10
     serverlist = []
     LOCALHOST = socket.gethostbyname(socket.gethostname()) # Pega o ip do host
     PORT = 7006 #define a porta, nesse caso a porta 7006 será dedicada a conexão UDP do servidor
