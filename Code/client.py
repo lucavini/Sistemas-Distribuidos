@@ -32,12 +32,13 @@ class Thread(threading.Thread):
         print("Mensagem recebida: {}".format(response))#Exibe na tela a mensagem de recebida do Servidor
 
 
-UDP_IP_ADDRESS = '172.17.0.2' # Este é o IP do Servidor, chamado de IP de LoopBack, ele se auto referencia.
-UDP_PORT_NO = 7002 # Número da porta, esse valor vai dentro da mensagem que está sendo transmitida.
-clientSock = socket.socket(family=socket.AF_INET,type=socket.SOCK_DGRAM) # Implementação da função "socket", que basicamente faz a criação da conexão, uma requisição que será entregue ao SO.
+# UDP_IP_ADDRESS = '172.17.0.7' # Este é o IP do Servidor, chamado de IP de LoopBack, ele se auto referencia.
+UDP_IP_ADDRESS = '127.0.1.1' # Este é o IP do Servidor, chamado de IP de LoopBack, ele se auto referencia.
+UDP_PORT_NO = 7006 # Número da porta, esse valor vai dentro da mensagem que está sendo transmitida.
 threads=[]
 Message=[]
 for x in range(30):
+    clientSock = socket.socket(family=socket.AF_INET,type=socket.SOCK_DGRAM) # Implementação da função "socket", que basicamente faz a criação da conexão, uma requisição que será entregue ao SO.
     Message.append(generateMatrix())  # Messangem que está sendo transmitida
     Message.append(generateMatrix())  # Messangem que está sendo transmitida
     StringMessage = [[str(ele) for ele in sub] for sub in Message] 

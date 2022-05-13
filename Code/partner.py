@@ -27,13 +27,10 @@ def multMatriz(mat1, mat2):
                 matRes[i].append(sum(listMult))
         return matRes
 
-# host_docker = socket.gethostbyname('ipc_server_dns_name')
-
-# print('meu ip: ', host_docker)
-
-HOST = '172.17.0.2'
+# HOST = '172.17.0.7'
+HOST = '127.0.1.1'
 maxqtd = 20
-PORT = 7025
+PORT = 7027
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         

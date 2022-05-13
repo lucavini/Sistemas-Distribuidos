@@ -7,10 +7,7 @@ import os
 import random
 from urllib import request
 from operator import itemgetter
-# from pandas import array
 import ctypes
-
-
 
 class Thread(threading.Thread):
     def __init__(self,Message,Adress,Socket):
@@ -52,7 +49,6 @@ class Thread(threading.Thread):
         SYS_gettid = 186
         
         t1 = time.time()
-        # recebe = self.Sock.recv(1024)
         Array = literal_eval(self.Mess.decode())
         matriz1 = []
         matriz2 = []
@@ -60,18 +56,15 @@ class Thread(threading.Thread):
         # Pega a primeira matriz
         for i in Array[0]:
             matriz1.append(literal_eval(i))
-        # print('matriz1: ', matriz1)
 
         # Pega a segunda matriz
         for i in Array[1]:
             matriz2.append(literal_eval(i))
-        # print('matriz2: ', matriz2)
 
         response = Thread.multMatriz(matriz1, matriz2)
-        # print('Matriz multiplicada: ',response)
 
         StringResponse = [[str(ele) for ele in sub] for sub in response]
-        # print(len(str(StringResponse)))
+        time.sleep(2)
         self.socket.sendto(str(StringResponse).encode(),self.Ad)
         global requestinappointment 
         print('Dentro da Funcao antes: ', requestinappointment)
@@ -83,7 +76,6 @@ class Thread(threading.Thread):
         os.system(cmd)
 
         
-
 class ThreadProc(threading.Thread):
     def __init__(self,Message,Conn,SocketUdp,Udpad):
         threading.Thread.__init__(self)
@@ -113,12 +105,10 @@ class ThreadProc(threading.Thread):
             # Pega a primeira matriz
             for i in Array[0]:
                 matriz1.append(literal_eval(i))
-            # print('matriz1: ', matriz1)
 
             # Pega a segunda matriz
             for i in Array[1]:
                 matriz2.append(literal_eval(i))
-            # print('matriz2: ', matriz2)
             tp = len(matriz1) * len(matriz2[0])
             td = t/tp
             global serverslist
@@ -142,7 +132,6 @@ class ThreadProc(threading.Thread):
 
             sorted(serverlist, key=itemgetter(2))
 
-
 if __name__ == '__main__':
     global maxrequest
     global requestinappointment
@@ -153,44 +142,25 @@ if __name__ == '__main__':
     maxrequest = 10
     serverlist = []
     LOCALHOST = socket.gethostbyname(socket.gethostname())
-    # socket.gethostbyname('ipc_server_dns_name') #define o localhost, como é passado '' ele assume o valor padrão, que é 127.0.0.1
-    PORT = 7002 #define a porta, nesse caso a porta 7002 será dedicada a conexão UDP do servidor
+    PORT = 7006 #define a porta, nesse caso a porta 7002 será dedicada a conexão UDP do servidor
     server = socket.socket(family=socket.AF_INET ,type=socket.SOCK_DGRAM) #define o socket, onde, family=socket.AF_INET diz que será utilizado ipv4 e type=socket.SOCK_DGRAM define o socket como um socket UDP
     server.bind((LOCALHOST, PORT)) #vincula o ip e porta que serão usados
     print("Servidor iniciado!")
     print("Aguardando nova conexao..")
     print('servidor: ', server)
 
-    
-        
-
-    # print('Criando conexão TCP')
-    # print("Aguardando nova conexao TCP..")
     tcpServer = socket.socket(family=socket.AF_INET ,type=socket.SOCK_STREAM)
-    PORT2 = 7025
+    PORT2 = 7027
     tcpServer.bind((LOCALHOST, PORT2))
-    # print(socket.gethostbyname(socket.gethostname()))
     for x in range(1):
         tcpServer.listen()
         conn, addr = tcpServer.accept()
         data = conn.recv(1024).decode("ascii") 
-        # print('Endereço do servidor parceiro: ', addr)
-        # print('Mensagem recebida: ', data)
         serverlist.append([conn,int(data),0])
-    print(serverlist)
-
-    # while True:
-    #     time.sleep(5)
-    #     conn.send(b'Confirmada conexao')
-    #     data = conn.recv(1024).decode("ascii")
-    #     print(data) 
-
-   
+    print(serverlist) 
 
     while True:
-        # print('numero de threads ativas: ',threading.active_count()) #mostra o número de threads ativas no momento (usaremos para limitar o número de conexões)
         rec=server.recvfrom(1024) #espera alguém mandar uma mensagem
-        # print('Qtd requisições: ', requestinappointment)
         if requestinappointment < maxrequest:
             newthread = Thread(rec[0],rec[1],server) #cria uma trhead e armazena nela (a mensagem recebida, o ip e porta de quem enviou, e o socket UDP para enviar a 
             requestinappointment += 1

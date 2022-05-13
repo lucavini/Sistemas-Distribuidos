@@ -1,0 +1,84 @@
+Servidor iniciado!
+Aguardando nova conexao..
+servidor:  <socket.socket fd=3, family=AddressFamily.AF_INET, type=SocketKind.SOCK_DGRAM, proto=0, laddr=('127.0.1.1', 7006)>
+[[<socket.socket fd=5, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.1.1', 7027), raddr=('127.0.0.1', 45554)>, 20, 0]]
+Iniciada conexão com cliente ('127.0.0.1', 34881)
+Dentro do Main:  1
+Iniciada conexão com cliente ('127.0.0.1', 47780)
+Dentro do Main:  2
+Iniciada conexão com cliente ('127.0.0.1', 33218)
+Dentro do Main:  3
+Iniciada conexão com cliente ('127.0.0.1', 45593)
+Dentro do Main:  4
+Iniciada conexão com cliente ('127.0.0.1', 44125)
+Dentro do Main:  5
+Iniciada conexão com cliente ('127.0.0.1', 56010)
+Dentro do Main:  6
+Iniciada conexão com cliente ('127.0.0.1', 37166)
+Dentro do Main:  7
+Iniciada conexão com cliente ('127.0.0.1', 56446)
+Dentro do Main:  8
+Iniciada conexão com cliente ('127.0.0.1', 36261)
+Dentro do Main:  9
+Iniciada conexão com cliente ('127.0.0.1', 43706)
+Dentro do Main:  10
+Dentro do Main:  10
+Dentro do Main:  10
+Dentro do Main:  10
+('127.0.0.1', 56738)
+('127.0.0.1', 37268)
+Dentro do Main:  10
+Dentro do Main:  10
+('127.0.0.1', 50842)
+('127.0.0.1', 48586)
+Dentro do Main:  10
+Dentro do Main:  10
+('127.0.0.1', 39674)
+('127.0.0.1', 32920)
+Dentro do Main:  10
+Dentro do Main:  10
+('127.0.0.1', 57841)
+('127.0.0.1', 59105)
+Dentro do Main:  10
+Dentro do Main:  10
+('127.0.0.1', 35794)
+('127.0.0.1', 33030)
+Dentro do Main:  10
+('127.0.0.1', 45684)
+Dentro do Main:  10
+('127.0.0.1', 56386)
+Dentro do Main:  10
+Dentro do Main:  10
+('127.0.0.1', 56687)
+Dentro do Main:  10
+('127.0.0.1', 40092)
+('127.0.0.1', 55883)
+Dentro do Main:  10
+('127.0.0.1', 50181)
+Dentro do Main:  10
+('127.0.0.1', 43051)
+('127.0.0.1', 35180)
+Dentro do Main:  10
+Dentro do Main:  10
+('127.0.0.1', 51070)
+('127.0.0.1', 46852)
+Dentro da Funcao antes:  10
+Dentro da Funcao antes:  10
+Dentro da Funcao depois:  9
+Dentro da Funcao depois:  8
+Dentro da Funcao antes:  8
+Dentro da Funcao depois:  7
+Dentro da Funcao antes:  7
+Dentro da Funcao depois:  6
+Dentro da Funcao antes:  6
+Dentro da Funcao depois:  5
+Dentro da Funcao antes:  5
+Dentro da Funcao depois:  4
+Dentro da Funcao antes:  4
+Dentro da Funcao depois:  3
+Dentro da Funcao antes:  4
+Dentro da Funcao depois:  2
+Dentro da Funcao antes:  2
+Dentro da Funcao depois:  1
+Dentro da Funcao antes:  1
+Dentro da Funcao depois:  0
